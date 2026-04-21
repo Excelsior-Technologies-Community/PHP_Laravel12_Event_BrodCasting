@@ -17,7 +17,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'is_admin',   // ✅ IMPORTANT (add this)
+        'is_admin',   // IMPORTANT (add this)
     ];
 
     /**
