@@ -7,17 +7,16 @@ use App\Events\PostCreate;
 use Illuminate\Http\Request;
 use App\Events\PostDelete;
 
-
 class PostController extends Controller
 {
-
     public function __construct()
     {
-        $this->middleware('auth'); // ADD THIS
+        $this->middleware('auth');
     }
+
     public function index()
     {
-        $posts = Post::orderBy('id', 'asc')->get(); //  ASC order
+        $posts = Post::with('user')->orderBy('id', 'asc')->get();
         return view('posts', compact('posts'));
     }
 
@@ -42,10 +41,13 @@ class PostController extends Controller
     public function destroy($id)
     {
         $post = Post::findOrFail($id);
-        $post->delete();
 
-        event(new PostDelete($id));
+        if (auth()->user()->is_admin || $post->user_id === auth()->id()) {
+            $post->delete();
+            event(new PostDelete($id));
+            return back()->with('success', 'Post deleted');
+        }
 
-        return back()->with('success', 'Post deleted');
+        return back()->with('error', 'Unauthorized action.');
     }
 }
