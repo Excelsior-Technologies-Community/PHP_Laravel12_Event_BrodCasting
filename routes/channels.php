@@ -9,6 +9,7 @@ Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
 Broadcast::channel('posts', function ($user) {
     return [
         'id' => $user->id,
-        'name' => $user->name
+        'name' => $user->name,
+        'is_admin' => $user->is_admin
     ];
 });
